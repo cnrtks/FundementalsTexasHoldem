@@ -1,6 +1,7 @@
 package texasholdem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class TexasRound {
 
@@ -21,15 +22,17 @@ public class TexasRound {
     private ArrayList<TexasPlayer> roundPlayers;
     //true when no players must see to meet a raise, everyone has stayed
     public boolean allCall = false;
-
+    //keeps track of the highest hand value for players in showdown
+    public int highestHand = 0;
+    public boolean lastManStanding = false;
     public Deck deck;
     public Table table;
 
-    public TexasRound(ArrayList<Player> perpetualPlayers, int firstPlayer) {
+    public TexasRound(ArrayList<TexasPlayer> perpetualPlayers, int firstPlayer) {
         //setRoundName(name);
         roundPlayers = new ArrayList<TexasPlayer>();
         for (int i = 0; i < (perpetualPlayers.size()); i++) {
-            roundPlayers.add((TexasPlayer) perpetualPlayers.get(i));
+            roundPlayers.add(perpetualPlayers.get(i));
             totalBetCap = totalBetCap > roundPlayers.get(i).getWallet() ? totalBetCap : roundPlayers.get(i).getWallet();
         }
         currentPlayer = firstPlayer;
@@ -57,7 +60,7 @@ public class TexasRound {
         dealTable();
         betRound();
         System.out.println(table.toString());
-        //showdown();
+        showdown();
     }
 
     public void setCurrentPlayer(int currentPlayer) {
@@ -87,12 +90,12 @@ public class TexasRound {
     }
 
     public void dealFirstHand() {
-        for (int i = 0; i < roundPlayers.size(); i++) {//fix this, it is nearly duplicate
-            (roundPlayers.get(i)).setCard1(deck.getCard());
+        for (TexasPlayer t : roundPlayers) {
+            t.setCard1(deck.getCard());
             deck.removeCard();
         }
-        for (int i = 0; i < roundPlayers.size(); i++) {//duplicate
-            (roundPlayers.get(i)).setCard2(deck.getCard());
+        for (TexasPlayer t : roundPlayers) {
+            t.setCard2(deck.getCard());
             deck.removeCard();
         }
     }
@@ -108,13 +111,13 @@ public class TexasRound {
 
     public void playerPrompt(TexasPlayer player) {
         System.out.println(table.toString());
-        System.out.println(TexasOutput.playerHand(player));
-        System.out.println(TexasOutput.walletString(player.getWallet()));
-        System.out.println(TexasOutput.toCallString(toCall(player)));
+        System.out.println(TexasRoundOutput.playerHand(player));
+        System.out.println(TexasRoundOutput.walletString(player.getWallet()));
+        System.out.println(TexasRoundOutput.toCallString(toCall(player)));
 
         //boolean param tells menu if call or stay
-        System.out.println(TexasOutput.betMenuString(toCall(player) == 0));
-        betMenu(player, TexasUserInput.getBetMenu());
+        System.out.println(TexasRoundOutput.betMenuString(toCall(player) == 0));
+        betMenu(player, TexasRoundInput.getBetMenu());
     }
 
     public void see(TexasPlayer player) {
@@ -124,7 +127,7 @@ public class TexasRound {
     public void raise(TexasPlayer player) {
         see(player);
         System.out.println("\nRaise Amount: ");
-        double amount = TexasUserInput.getRaiseAmount(totalBetCap - highestBet);
+        double amount = TexasRoundInput.getRaiseAmount(totalBetCap - highestBet);
         bet(player, amount);
     }
 
@@ -139,12 +142,12 @@ public class TexasRound {
 
     //logic relating to gameplay, this occurs three times during the game
     public void betRound() {
-        for (int i = 0; i < roundPlayers.size(); i++) {
+        for (int i = 0; i < roundPlayers.size() && !lastManStanding; i++) {
             playerPrompt(roundPlayers.get(currentPlayer));
             nextPlayer();
         }
         allCall = checkCall();
-        while (allCall != true) {
+        while (!allCall && !lastManStanding) {
             playerPrompt(roundPlayers.get(currentPlayer));
             nextPlayer();
             allCall = checkCall();
@@ -153,7 +156,7 @@ public class TexasRound {
 
     public void checkLMS() {
         if (roundPlayers.size() == 1) {
-            //initiate win sequence
+            lastManStanding = true;
         }
     }
 
@@ -175,7 +178,87 @@ public class TexasRound {
                 checkLMS();
                 break;
             default:
-                betMenu(player, TexasUserInput.getBetMenu());
+                betMenu(player, TexasRoundInput.getBetMenu());
         }
+    }
+
+    public void showdown() {
+        roundPlayers.stream().map((t) -> {
+            t.addCards(table.getComCards());
+            return t;
+        }).map((t) -> {
+            HandValueChecker hvc = new HandValueChecker(t);
+            return t;
+        }).forEachOrdered((t) -> {
+            highestHand = t.getHandValue() > highestHand ? t.getHandValue() : highestHand;
+        });
+        Iterator i = roundPlayers.iterator();
+        while (i.hasNext()) {
+            if (((TexasPlayer) i.next()).getHandValue() != highestHand) {
+                i.remove();
+            }
+        }
+
+        checkLMS();
+        if (!lastManStanding) {
+            kickerCheck();
+        }
+        checkLMS();
+        if (!lastManStanding) {
+            splitPot();
+        } else {
+            try {
+                wonPot(roundPlayers.get(0));
+            } catch (Exception ex) {
+                System.out.println("Player count error, roundPlayers empty");
+            }
+        }
+    }
+
+    public void kickerCheck() {
+        int elementToCheck;
+        int kickerValue = 0;
+        switch (highestHand) {
+            case 1:
+                elementToCheck = 1;
+                break;
+            case 2:
+                elementToCheck = 2;
+                break;
+            case 3:
+                elementToCheck = 4;
+                break;
+            case 4:
+                elementToCheck = 3;
+                break;
+            default:
+                elementToCheck = 0;
+        }
+        if (elementToCheck != 0) {
+            for (TexasPlayer t : roundPlayers) {
+                kickerValue = ((PlayingCard) t.hand.get(elementToCheck)).getRank().getVal()
+                        > kickerValue ? ((PlayingCard) t.hand.get(elementToCheck)).getRank().getVal()
+                                : kickerValue;
+            }
+            Iterator i = roundPlayers.iterator();
+            while (i.hasNext()) {
+                if (((PlayingCard) ((TexasPlayer) i.next()).hand.get(elementToCheck)).getRank().getVal() != kickerValue) {
+                    i.remove();
+                }
+            }
+        }
+    }
+
+    public void splitPot() {
+        roundPlayers.forEach((t) -> {
+            t.walletUpdate(pot / roundPlayers.size());
+        });
+        System.out.println("Split pot: $" + pot);
+    }
+
+    public void wonPot(TexasPlayer winner) {
+        winner.walletUpdate(pot);
+        System.out.println(winner.getHand());
+        System.out.println(winner.getPlayerId() + "Wins $" + pot);
     }
 }

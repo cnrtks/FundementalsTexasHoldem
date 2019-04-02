@@ -17,13 +17,13 @@ public abstract class Player
      * A constructor that allows you to set the player's unique ID
      * @param name the unique ID to assign to this player.
      */
-    public Player(String name)
+    public Player(String name)  /////this does the same as setPlayerID check source code for which to keep
     {
         playerID= name;
     }
     
     //@return the playerID
-    public String getPlayerID() 
+    public String getPlayerId() 
     {
         return playerID;
     }
@@ -32,7 +32,7 @@ public abstract class Player
      * Ensure that the playerID is unique
      * @param givenID the playerID to set
      */
-    public void setPlayerID(String givenID) 
+    public void setPlayerId(String givenID) 
     {
         playerID = givenID;
     }

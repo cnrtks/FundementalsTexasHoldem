@@ -13,11 +13,12 @@ import java.util.Collections;
 //Four Of A Kind
 //Straight Flush
 //Royal Flush
+
 public class HandValueChecker {
 
     public static final int HAND_SIZE = 5;
 
-    private ArrayList<PlayingCard> hand7;
+    private final ArrayList<PlayingCard> hand7;
     private ArrayList<PlayingCard> hand5;
     private int handValue = 0;
     boolean flush;
@@ -47,6 +48,33 @@ public class HandValueChecker {
 //        return handValue;
     }
 
+    public HandValueChecker(TexasPlayer player) {
+        hand7 = new ArrayList();
+        hand5 = new ArrayList();
+        for (Card c : player.getHand()) {
+            hand7.add((PlayingCard) c);
+        }
+        Collections.sort(hand7);
+        Collections.reverse(hand7);
+        handValue = matchCheck();
+        //any matches higher than 3 of a kind will preclude the possibility of a straight or flush in 7 card hand
+        if (handValue > 4) { //for given hand greater than 7 just remove this if
+            straight = false;
+            flush = false;
+        } else {
+            straight = straightCheck();
+            if (handValue < 6) {
+                flush = flushCheck(hand7);
+            }
+        }
+        player.clearHand();
+        for(PlayingCard c: hand5){
+            player.addCard((Card) c);
+        }
+        player.setHandValue(handValue);
+        System.out.println(handValue);///debug
+    }
+
     public int getHandValue() {
         return handValue;
     }
@@ -55,7 +83,7 @@ public class HandValueChecker {
         ArrayList<PlayingCard> tempHand5 = new ArrayList();
         ArrayList<PlayingCard> high5 = new ArrayList();
 
-        for (int i = 0; i < hand7.size() - HAND_SIZE; i++) {
+        for (int i = 0; i <= hand7.size() - HAND_SIZE; i++) {
             tempHand5.clear();
             tempHand5.add(hand7.get(i));
             for (int j = 1; j < HAND_SIZE; j++) {
@@ -115,6 +143,9 @@ public class HandValueChecker {
                     for (PlayingCard d : givenHand) {
                         if (d.getSuit().getVal() == c.getSuit().getVal()) {
                             hand5.add(d);
+                        }
+                        if (hand5.size() >= HAND_SIZE) {
+                            return true;
                         }
                     }
                 }

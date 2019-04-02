@@ -36,6 +36,7 @@ public class Tester {
         PlayingCard da = new PlayingCard(Rank.ACE, Suit.DIAMONDS);
         PlayingCard dk = new PlayingCard(Rank.KING, Suit.DIAMONDS);
 
+        PlayingCard d8 = new PlayingCard(Rank.EIGHT, Suit.DIAMONDS);
         PlayingCard d9 = new PlayingCard(Rank.NINE, Suit.DIAMONDS);
         PlayingCard d0 = new PlayingCard(Rank.TEN, Suit.DIAMONDS);
 
@@ -46,6 +47,7 @@ public class Tester {
         PlayingCard sk = new PlayingCard(Rank.KING, Suit.SPADES);
         PlayingCard sj = new PlayingCard(Rank.JACK, Suit.SPADES);
         PlayingCard sq = new PlayingCard(Rank.QUEEN, Suit.SPADES);
+        PlayingCard s8 = new PlayingCard(Rank.EIGHT, Suit.SPADES);
 
         ArrayList<PlayingCard> pair3 = new ArrayList();//3pair
         pair3.add(s3);
@@ -85,8 +87,8 @@ public class Tester {
 
         ArrayList<PlayingCard> sf = new ArrayList();//straight flush
         sf.add(d3);
-        sf.add(d4);
-        sf.add(s5);
+        sf.add(d8);
+        sf.add(d5);
         sf.add(d6);
         sf.add(d7);
         sf.add(d9);
@@ -104,44 +106,21 @@ public class Tester {
         ArrayList<PlayingCard> sfl = new ArrayList();//stright flush lwer than striaght
         sfl.add(d3);
         sfl.add(d4);
-        sfl.add(s5);
+        sfl.add(d5);
         sfl.add(d6);
         sfl.add(d7);
         sfl.add(s9);
-        sfl.add(s0);
+        sfl.add(s8);
 
-//    ca.sheridancollege.project.HandValueChecker h2 = new ca.sheridancollege.project.HandValueChecker(pair3);
-//    HandValueChecker h3 = new HandValueChecker(toak);//actually a full house
-//    HandValueChecker h4 = new HandValueChecker(straight);
+        HandValueChecker h2 = new HandValueChecker(pair3);
+        HandValueChecker h3 = new HandValueChecker(toak);//actually a full house
+        HandValueChecker h4 = new HandValueChecker(straight);
         HandValueChecker h5 = new HandValueChecker(flush);
-    HandValueChecker h6 = new HandValueChecker(sf);
-//    HandValueChecker h7 = new HandValueChecker(rf);
-//    HandValueChecker h8 = new HandValueChecker(sfl);
+        HandValueChecker h6 = new HandValueChecker(sf);
+        HandValueChecker h7 = new HandValueChecker(rf);
+        HandValueChecker h8 = new HandValueChecker(sfl);
 
         //game tester
         TexasHoldem th1 = new TexasHoldem("game1");
-
-        System.out.println(
-                "Enter Number of players: ");
-        int numOfPlayers = TexasUserInput.getNumPlayers();
-        ArrayList<Player> playerArr = new ArrayList<Player>();
-
-        for (int i = 0;
-                i < numOfPlayers;
-                i++) {
-            System.out.println("Enter Player name: ");
-            String name = UserInput.getString();
-            System.out.println("Enter Player ID: ");
-            String id = UserInput.getString();
-            System.out.println("How much money they got?");
-            double wallet = UserInput.getDouble();
-            playerArr.add(new TexasPlayer(name, id, wallet));
-        }
-
-        th1.setPlayers(playerArr);
-
-        TexasRound round1 = new TexasRound(playerArr, th1.getFirstPlayer());
-
     }
-
 }

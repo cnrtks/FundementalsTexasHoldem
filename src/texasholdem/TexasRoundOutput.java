@@ -1,13 +1,13 @@
 package texasholdem;
 
-public class TexasOutput {
+public class TexasRoundOutput {
 
     public static String nextPlayerScreen(Player player) {
         return String.format("\n++++++++++++++++++++++++++++++++\n\n"
                 + "%s"
                 + "\nPress Enter\n"
                 + "\n\n++++++++++++++++++++++++++++++++\n",
-                player.getPlayerID());
+                player.getPlayerId());
     }
     
     public static String betMenuString(boolean see){
