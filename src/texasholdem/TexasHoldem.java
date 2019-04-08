@@ -46,7 +46,6 @@ public class TexasHoldem extends Game {
     }
 
     public void continuePrompt() {
-        System.out.println(remainingPlayers.size());
         Iterator<TexasPlayer> i = remainingPlayers.iterator();
         while (i.hasNext()) {
             i.next();
@@ -88,7 +87,7 @@ public class TexasHoldem extends Game {
 
         players.stream().filter((t) -> (t.getWallet() - t.getInitialWallet() == highestWon)).forEachOrdered((t) -> {
             remainingPlayers.add(t);
-            System.out.println(t.getPlayerId() + "Wins!");
+            System.out.println(t.getPlayerId() + " Wins!");
         });
 
         System.out.println("Game Over");

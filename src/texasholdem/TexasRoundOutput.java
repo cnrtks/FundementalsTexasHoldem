@@ -25,6 +25,6 @@ public class TexasRoundOutput {
     }
     
     public static String playerHand(TexasPlayer player){
-        return String.format("%s and %s", ((PlayingCard)player.getCard1()).toString(), ((PlayingCard)player.getCard2()).toString());
+        return String.format("%s: %s and %s", player.getPlayerId(), ((PlayingCard)player.getCard1()).toString(), ((PlayingCard)player.getCard2()).toString());
     }
 }

@@ -253,12 +253,12 @@ public class TexasRound {
         roundPlayers.forEach((t) -> {
             t.walletUpdate(pot / roundPlayers.size());
         });
-        System.out.println("Split pot: $" + pot);
+        System.out.println("Split pot: $" + pot);// move this to texasRoundOutput
     }
 
     public void wonPot(TexasPlayer winner) {
         winner.walletUpdate(pot);
         System.out.println(winner.getHand());
-        System.out.println(winner.getPlayerId() + "Wins $" + pot);
+        System.out.println(winner.getPlayerId() + " Wins $" + pot);//move this to texasRoundOutput
     }
 }
