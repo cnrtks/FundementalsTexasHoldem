@@ -44,17 +44,16 @@ public class TexasPlayerTest {
      */
     @Test
     public void testSetWalletGood() {
-        System.out.println("setWallet");
-        double wallet = 100;
-        TexasPlayer instance = null;
-        instance.setWallet(wallet);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("setWalletGood");
+        double wallet = 5;
+        TexasPlayer testPlayer = new TexasPlayer("test", 1);
+        testPlayer.setWallet(wallet);
+        assertSame(testPlayer.getWallet(),wallet);
     }
     
         @Test
     public void testSetWalletBad() {
-        System.out.println("setWallet");
+        System.out.println("setWalletBad");
         double wallet = 0.0;
         TexasPlayer instance = null;
         instance.setWallet(wallet);
@@ -64,7 +63,7 @@ public class TexasPlayerTest {
     
         @Test
     public void testSetWalletBoundary() {
-        System.out.println("setWallet");
+        System.out.println("setWalletBoundary");
         double wallet = 0.0;
         TexasPlayer instance = null;
         instance.setWallet(wallet);
@@ -76,14 +75,13 @@ public class TexasPlayerTest {
      * Test of getWallet method, of class TexasPlayer.
      */
     @Test
-    public void testGetWallet() {
+    public void testGetWalletGood() {
         System.out.println("getWallet");
-        TexasPlayer instance = null;
-        double expResult = 0.0;
-        double result = instance.getWallet();
+        double wallet = 0;
+        TexasPlayer testPlayer = new TexasPlayer("test", wallet);
+        double expResult = 0;
+        double result = testPlayer.getWallet();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
