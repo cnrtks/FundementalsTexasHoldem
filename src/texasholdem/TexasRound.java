@@ -6,16 +6,16 @@ import java.util.Iterator;
 public class TexasRound {
 
     public static final double MINIMUM_BET = 0.25;
+    public static final double MAXIMUM_BET = 2000;
     public static final double SMALL_BLIND = 1;
     public static final double BIG_BLIND = 2;
 
-    //private String roundName;
     //the total money on the table
     private double pot = 0;
     //the total a player must have bet during the round to stay in
     private double highestBet = 0;
     //the smallest wallet entering the game ensures everyone can play (split pot not implemented)
-    private double totalBetCap = 0;
+    private double totalBetCap = MAXIMUM_BET;
     //keeps track of whos turn it is
     private int currentPlayer;
     //borrows players from games arraylist
@@ -33,7 +33,7 @@ public class TexasRound {
         roundPlayers = new ArrayList<TexasPlayer>();
         for (int i = 0; i < (perpetualPlayers.size()); i++) {
             roundPlayers.add(perpetualPlayers.get(i));
-            totalBetCap = totalBetCap > roundPlayers.get(i).getWallet() ? totalBetCap : roundPlayers.get(i).getWallet();
+            totalBetCap = totalBetCap < roundPlayers.get(i).getWallet() ? totalBetCap : roundPlayers.get(i).getWallet();
         }
         currentPlayer = firstPlayer;
 

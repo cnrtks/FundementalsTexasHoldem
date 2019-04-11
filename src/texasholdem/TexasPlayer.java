@@ -32,7 +32,6 @@ public class TexasPlayer extends Player {
     public void setCard1(Card card) {
         card1 = card;
         hand.add(card);
-        System.out.println("debug2");
     }
 
     public Card getCard1() {

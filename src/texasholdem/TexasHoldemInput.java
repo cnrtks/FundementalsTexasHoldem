@@ -11,7 +11,7 @@ public class TexasHoldemInput extends UserInput {
     public static int getNumPlayers() {//change to throw
         int ret = getInt();
         if (ret < MIN_PLAYERS || ret > MAX_PLAYERS) {
-            System.out.printf("\nMust be an integer between %d and %d", MIN_PLAYERS, MAX_PLAYERS);
+            System.out.printf("\nMust be an integer between %d and %d\n", MIN_PLAYERS, MAX_PLAYERS);
             ret = getNumPlayers();
         }
         return ret;

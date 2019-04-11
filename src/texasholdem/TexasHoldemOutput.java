@@ -24,4 +24,9 @@ public class TexasHoldemOutput {
         return TexasHoldemInput.getYesNo();
     }
    
+    public static String winnerDialogue(TexasPlayer tp){
+        return String.format("%s Wins! Initial Money: $%.2f, Leaving with: $%.2f",
+                tp.getPlayerId(), tp.getInitialWallet(), tp.getWallet());
+    }
+    
 }

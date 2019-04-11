@@ -41,11 +41,6 @@ public class HandValueChecker {
                 flush = flushCheck(hand7);
             }
         }
-        //for debug
-        System.out.println(hand5);
-        //remove above
-        System.out.println(handValue);
-//        return handValue;
     }
 
     public HandValueChecker(TexasPlayer player) {
@@ -72,7 +67,6 @@ public class HandValueChecker {
             player.addCard((Card) c);
         }
         player.setHandValue(handValue);
-        System.out.println(handValue);///debug
     }
 
     public int getHandValue() {

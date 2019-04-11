@@ -87,9 +87,8 @@ public class TexasHoldem extends Game {
 
         players.stream().filter((t) -> (t.getWallet() - t.getInitialWallet() == highestWon)).forEachOrdered((t) -> {
             remainingPlayers.add(t);
-            System.out.println(t.getPlayerId() + " Wins!");
+            System.out.println(TexasHoldemOutput.winnerDialogue(t));
         });
-
         System.out.println("Game Over");
     }
 
